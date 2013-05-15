@@ -2,7 +2,6 @@
 # Quake game
 # This makefile builds both an activity and a shared library.
 #########################################################################
-ifneq ($(TARGET_SIMULATOR),true) # not 64 bit clean
 
 TOP_LOCAL_PATH:= $(call my-dir)
 
@@ -32,7 +31,7 @@ include $(CLEAR_VARS)
 # Optional tag would mean it doesn't get installed by default
 LOCAL_MODULE_TAGS := optional
 
-LOCAL_CFLAGS := -Werror
+LOCAL_CFLAGS := -Werror -Wno-error=unused-parameter
 
 LOCAL_SRC_FILES:= \
   cd_null.cpp \
@@ -91,41 +90,17 @@ LOCAL_SRC_FILES:= \
   world.cpp \
   zone.cpp
 
+LOCAL_C_INCLUDES:= \
+	$(call include-path-for, wilhelm)
+
 LOCAL_SHARED_LIBRARIES := \
 	libutils \
-	libmedia \
 	libEGL \
-	libGLESv1_CM
+	libGLESv1_CM \
+	libOpenSLES
 
 LOCAL_MODULE := libquake
 
 LOCAL_ARM_MODE := arm
 
-LOCAL_PRELINK_MODULE := false
-
 include $(BUILD_SHARED_LIBRARY)
-
-#########################################################################
-# Build stand-alone quake executable on device
-#########################################################################
-
-ifneq ($(BUILD_TINY_ANDROID),true)
-ifeq ($(TARGET_ARCH),arm)
-
-LOCAL_PATH:= $(TOP_LOCAL_PATH)/standalone
-include $(CLEAR_VARS)
-
-LOCAL_SRC_FILES:= main.cpp
-
-LOCAL_SHARED_LIBRARIES := libc libm libutils libui libquake libEGL libGLESv1_CM
-
-LOCAL_MODULE:= quake
-
-LOCAL_MODULE_TAGS := optional
-
-include $(BUILD_EXECUTABLE)
-
-endif
-endif
-
-endif # TARGET_SIMULATOR

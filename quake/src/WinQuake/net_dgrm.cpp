@@ -126,7 +126,7 @@ void NET_Ban_f (void)
 		    ulongaddr addrTemp;
 		    addrTemp.ul = banAddr;
 		    ulongaddr maskTemp;
-		    maskTemp.ul - banMask;
+		    maskTemp.ul = banMask;
 
 			if (addrTemp.addr.s_addr)
 			{
